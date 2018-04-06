@@ -9,7 +9,7 @@ const Spotify = require('node-spotify-api')
 const Twitter = require('twitter')
 
 // set variable to pull data from the spotify keys / spotify ID.
-var spotify = new Spotify(keys.spotify);
+// var spotify = new Spotify(keys.spotify);
 // set variable to pull data from the twitter consumer/access keys.
 var client = new Twitter(keys.twitter);
 
@@ -46,7 +46,8 @@ let liri = {
             liri.spotify_this(input)
             liri.movie_this(input)
             liri.do_what_it_says(input)
-        // },
+        },
+}
 
 // Added credentials. Using environment variables to keep info private and safe.        
 var client = new Twitter({
@@ -55,34 +56,86 @@ var client = new Twitter({
     access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
   });
+
+// var APIKey =   
+// var queryURL = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=twitterapi&count=10"; // UNABLE TO FIGURE OUT THE COUNT PARAMETER.
+
+// $.ajax({
+//     url: queryURL,
+//     method: 'GET'
+// }).then(function(response) {
+//     console.log(queryURL)
+//     console.log(response);
+// });
+    
   // set params to equal to my twitter screen name & grab my tweets from my timeline. - All 20 were grabbed without setting a limit.
   //***I CREATED A DUMMY ACCOUNT & ONLY ENTERED 20 TWEETS --- HOW DO I LIMIT TO 10 TWEETS??? *****
-  var params = {screen_name: 'kmy_ucsd'};
-  client.get('statuses/user_timeline', params, function(error, tweets, response) {
+var params = {screen_name: 'kmy_ucsd'};
+  client.get('statuses_count/user_timeline', params, function(error, tweets, response) {
     if (!error) {
       console.log(tweets); // print my timeline tweets to the console.
     }
   });
 
-    // THIS IS ROB'S CODE FOR TWITTER TWEETS -- **** UNSURE HOW TO GET IT TO WORK FOR MY CODE *****
-//         my_tweets: (input) => {
-//             console.log("hi")
-//             var params = {screen_name: 'kmy_ucsd',
-//                 count: 20
-//             };
-//             client.get('statuses/user_timeline', params, function (error, tweets, response) {
-//                 if (!error) {
-//                     console.log("Last 20 Tweets");
-//                     for (i = 0; i < tweets.length; i++) {
-//                         console.log(i + 1 + ". " + tweets[i].text)
-//                         fs.appendFile('./log.txt', i + 1 + ". " + tweets[i].text, 'utf8', (error) => {
-//                             if (error) throw err;
-//                         })
-//                     }
-//                 } else {
-//                     console.log(error)
-//                 }
-//             });
-//         }
-// }
 
+// $.ajax({
+//     url: queryURL,
+//     method: 'GET'
+// }).then(function(response) {
+//     console.log(queryURL)
+//     console.log(response);
+// });
+
+
+  spotify_this: (input) => {
+    var song;
+    if (input === "") {
+        song = 'The Sign Ace of Base';
+    } else {
+        song = input;
+    }
+    var spotify = new Spotify(keys.spotify);
+    spotify.search({
+        type: 'track',
+        query: song
+    }, function (err, data) {
+        if (err) {
+            console.log('Error occurred: ' + err);
+            return;
+        }
+        console.log(data.tracks.items[0].album.artists[0].name)
+        console.log(data.tracks.items[0].name)
+        console.log(data.tracks.items[0].external_urls.spotify)
+        console.log(data.tracks.items[0].album.name)
+    });
+};
+
+// OMDB
+movie_this: (input) => {
+    var movie;
+    if (input === "") {
+        movie = 'Mr Nobody';
+    } else {
+        movie = input;
+    }
+    request('http://www.omdbapi.com/?apikey=50eb567a&t=' + movie, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // * Title of the movie.
+            console.log(JSON.parse(body).Title);
+            // // * Year the movie came out.
+            // console.log(JSON.parse(body).Year);
+            // // * IMDB Rating of the movie.
+            // console.log(JSON.parse(body).Ratings[0].Source + ":", JSON.parse(body).Ratings[0].Value);
+            // // * Rotten Tomatoes Rating of the movie.
+            // console.log(JSON.parse(body).Ratings[1].Source + ":", JSON.parse(body).Ratings[1].Value);
+            // // * Country where the movie was produced.
+            // console.log(JSON.parse(body).Country);
+            // // * Language of the movie.
+            // console.log(JSON.parse(body).Language);
+            // // * Plot of the movie.
+            // console.log(JSON.parse(body).Plot);
+            // // * Actors in the movie.
+            // console.log(JSON.parse(body).Actors);
+        }
+    });
+};
