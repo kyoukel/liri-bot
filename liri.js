@@ -11,7 +11,7 @@ const spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
 let [one, two, command, ...input] = process.argv;
-console.log(command); 
+console.log(command);
 
 input = input.join(" ")
 
@@ -32,17 +32,20 @@ switch (command) {
         console.log("do the chicken dance!")
         grabText();
         break
-}    
+}
 
 function twitterCount() {
     console.log('working?')
-    var params = {screen_name: 'kmy_ucsd', count: '20'};
-    client.get('statuses/user_timeline', params, function(error, tweets, response) {
-      console.log(error);
+    var params = {
+        screen_name: 'kmy_ucsd',
+        count: '20'
+    };
+    client.get('statuses/user_timeline', params, function (error, tweets, response) {
+        console.log(error);
         if (!error) {
             let mapper = (tweet) => tweet.text;
             console.log(tweets.map(mapper));
-      }
+        }
     });
 }
 
@@ -57,7 +60,6 @@ function spotify_this(input) {
         type: 'track',
         query: song
     }, function (err, data) {
-        // console.log(data.tracks.items[0]);
         if (err) {
             console.log('Error occurred: ' + err);
             return;
@@ -82,7 +84,15 @@ function movie_this(input) {
         if (!error && response.statusCode == 200 && movieData.Response == "True") {
             const filterer = (rating) => rating.Source == "Rotten Tomatoes";
             // console.log(movieData);
-            let { Title, Year, Rated, Country, Language, Plot, Actors} = movieData
+            let {
+                Title,
+                Year,
+                Rated,
+                Country,
+                Language,
+                Plot,
+                Actors
+            } = movieData
             console.log(Title)
             console.log(Year)
             console.log(Rated)
@@ -91,20 +101,17 @@ function movie_this(input) {
             console.log(Language)
             console.log(Plot)
             console.log(Actors)
-
-            // let luke = { occupation: 'jedi', father: 'anakin' };
-            // let {occupation, father} = luke;
         }
     });
 };
 
 function grabText() {
-    fs.readFile("random.txt", "utf8", function(error, data) {
+    fs.readFile("random.txt", "utf8", function (error, data) {
         if (error) {
             return console.log(error);
-          }
-          console.log(data);
-          var song = data.split(",")[1];
-          spotify_this(song);
+        }
+        console.log(data);
+        var song = data.split(",")[1];
+        spotify_this(song);
     })
 }
