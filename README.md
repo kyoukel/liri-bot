@@ -78,13 +78,13 @@ INSTRUCTIONS:
                 var client = new Twitter(keys.twitter);
 
     12. Make it so liri.js can take in one of the following commands:
-* `my-tweets`
+            * `my-tweets`
 
-* `spotify-this-song`
+            * `spotify-this-song`
 
-* `movie-this`
+            * `movie-this`
 
-* `do-what-it-says`
+            * `do-what-it-says`
 
     NOTE: Like the Twitter API, the Spotify API requires you sign up as a developer to generate the necessary credentials. 
         
